@@ -1,17 +1,11 @@
 package ro.unibuc.info.service;
 
+import ro.unibuc.info.logging.ConsoleLogger;
+
 public class EmailNotificationService implements NotificationService {
 
-  @Override
-  public void sendFreeNotification()
+  public void sendGradeNotification()
   {
-    System.out.println("Email: New spot is free");
+    ConsoleLogger.getInstance().logInfo("New Grade saved");
   }
-
-  @Override
-  public void sendBusyNotification()
-  {
-    System.out.println("Email: A spot became busy");
-  }
-
 }

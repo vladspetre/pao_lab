@@ -1,4 +1,4 @@
-package ro.unibuc.info.logger;
+package ro.unibuc.info.logging;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,29 +11,45 @@ import java.time.format.DateTimeFormatter;
 
 public class FileLogger implements Logger {
 
+  private static FileLogger instance;
   public static final String LOG_DIR_PATH = "logs/today";
   public static final String LOG_FILE_PATH = LOG_DIR_PATH + "/log.txt";
   public static final String LOG_TEMPLATE = "%s, [%s] %s\n";
-  private DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+  private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+  private FileLogger() {
+  }
+
+  public static FileLogger getInstance() {
+    if (instance == null) {
+      instance = new FileLogger();
+    }
+    return instance;
+  }
   @Override
   public void logInfo(String message) {
-    writeToFile(String.format(LOG_TEMPLATE,
-        LocalDateTime.now().format(fmt),
-        "INFO",
-        message));
+    log("INFO", message);
+  }
+
+  @Override
+  public void logWarn(String message) {
+    log("WARN", message);
   }
 
   @Override
   public void logError(String message) {
+    log("ERROR", message);
+  }
+
+  private void log(String INFO, String message) {
     writeToFile(String.format(LOG_TEMPLATE,
         LocalDateTime.now().format(fmt),
-        "ERROR",
+        INFO,
         message));
   }
 
   private void writeToFile(String log) {
-    if(!checkAndCreateFile()){
+    if (!checkAndCreateFile()) {
       return;
     }
 
