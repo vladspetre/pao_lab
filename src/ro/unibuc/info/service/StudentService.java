@@ -12,11 +12,11 @@ public class StudentService {
     String[] lines = fileContent.split("\n");
 
     return Arrays.stream(lines)
-        .map(StudentService::buildStudent)
+        .map(this::buildStudent)
         .toList();
   }
 
-  private static Student buildStudent(String line) {
+  private Student buildStudent(String line) {
     String[] details = line.split(",");
     return new Student(
         details[0],
@@ -31,4 +31,11 @@ public class StudentService {
     );
   }
 
+  public String getStudentHeader(Student student) {
+    return student.getFirstName() + "," + student.getLastName() + "," + student.getEmail();
+  }
+
+  public String getStudentDetails(Student student) {
+    return student.getFirstName() + "," + student.getLastName() + "," + student.getEmail();
+  }
 }

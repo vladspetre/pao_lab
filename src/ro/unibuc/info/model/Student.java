@@ -1,6 +1,6 @@
 package ro.unibuc.info.model;
 
-public class Student extends Person{
+public class Student extends Person {
 
   private int studentId;
   private String school;
@@ -9,7 +9,7 @@ public class Student extends Person{
   private String email;
 
   public Student(String firstName, String lastName, int age, String socialNr, int studentId,
-      String school, String specialization, int year,String email) {
+      String school, String specialization, int year, String email) {
     super(firstName, lastName, age, socialNr);
     this.studentId = studentId;
     this.school = school;
