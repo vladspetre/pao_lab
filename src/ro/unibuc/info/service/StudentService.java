@@ -2,6 +2,8 @@ package ro.unibuc.info.service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
+import ro.unibuc.info.model.Catalog;
 import ro.unibuc.info.model.Student;
 import ro.unibuc.info.utils.FileUtils;
 
@@ -32,10 +34,22 @@ public class StudentService {
   }
 
   public String getStudentHeader(Student student) {
-    return student.getFirstName() + "," + student.getLastName() + "," + student.getEmail();
+    return "%s,%s,%s".formatted(student.getFirstName(), student.getLastName(), student.getEmail());
   }
 
-  public String getStudentDetails(Student student) {
-    return student.getFirstName() + "," + student.getLastName() + "," + student.getEmail();
+  public String getStudentDetails(Student student, Catalog catalog) {
+
+    StringBuilder sb = new StringBuilder().append(student.getFirstName()).append(",")
+        .append(student.getLastName()).append(",")
+        .append(student.getEmail()).append(",")
+        .append("Grades:");
+
+    catalog.getGrades().entrySet().stream()
+        .filter(entry -> entry.getKey().getLastName().equals(student.getLastName()))
+        .findFirst()
+        .map(Entry::getValue)
+        .ifPresent(sb::append);
+
+    return sb.toString();
   }
 }
