@@ -8,7 +8,6 @@ import ro.unibuc.info.logging.LoggerFactory;
 import ro.unibuc.info.logging.LoggerType;
 import ro.unibuc.info.model.Catalog;
 import ro.unibuc.info.model.Course;
-import ro.unibuc.info.model.CourseGrades;
 import ro.unibuc.info.model.Student;
 import ro.unibuc.info.repository.StudentsRepository;
 import ro.unibuc.info.service.CatalogService;
