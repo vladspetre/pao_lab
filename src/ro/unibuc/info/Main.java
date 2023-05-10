@@ -30,7 +30,7 @@ public class Main {
 
     //TODO: refactor this
     Student s = StudentsRepository.getStudentById(1);
-    System.out.println(s.getFirstName() + " " + s.getLastName());
+    logger.logInfo(s.getFirstName() + " " + s.getLastName());
 
     Scanner scanner = new Scanner(System.in);
     String option = "";
