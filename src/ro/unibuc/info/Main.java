@@ -21,6 +21,7 @@ public class Main {
 
     StudentService studentService = new StudentService(); // to use dependency injection for repository
     CatalogService catalogService = new CatalogService();
+
     // load students from file
     List<Student> students = studentService.loadStudentsFromFile();
     Catalog catalog = catalogService.init(students);
