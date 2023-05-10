@@ -19,7 +19,7 @@ public class Main {
   public static void main(String[] args) {
     final Logger logger = LoggerFactory.getLogger(LoggerType.CONSOLE);
 
-    StudentService studentService = new StudentService(); // to use dependency injection for repository
+    StudentService studentService = new StudentService(); //dependency injection for repository
     CatalogService catalogService = new CatalogService();
 
     // load students from file
