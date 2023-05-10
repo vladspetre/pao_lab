@@ -22,4 +22,10 @@ public class DatabaseConnection {
 
     return dbConnection;
   }
+
+  public static void closeConnection() throws SQLException {
+    if(dbConnection != null || !dbConnection.isClosed()){
+      dbConnection.close();
+    }
+  }
 }

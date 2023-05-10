@@ -3,11 +3,24 @@ package ro.unibuc.info.service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
+import ro.unibuc.info.exception.DataNotFoundException;
 import ro.unibuc.info.model.Catalog;
 import ro.unibuc.info.model.Student;
+import ro.unibuc.info.repository.Repository;
 import ro.unibuc.info.utils.FileUtils;
 
 public class StudentService {
+
+  private final Repository studentsRepository;
+
+  public StudentService(Repository studentsRepository) {
+    this.studentsRepository = studentsRepository;
+  }
+
+  public Student getStudentById(int id) {
+    return studentsRepository.getStudentById(id)
+        .orElseThrow(()-> new DataNotFoundException("Could not find user with id " + id));
+  }
 
   public List<Student> loadStudentsFromFile() {
     String fileContent = FileUtils.readFromFile("resources/students.csv");
@@ -16,6 +29,14 @@ public class StudentService {
     return Arrays.stream(lines)
         .map(this::buildStudent)
         .toList();
+  }
+
+  public void insert(List<Student> students) {
+    students.forEach(studentsRepository::insert);
+  }
+
+  public List<Student> findAll() {
+    return studentsRepository.findAll();
   }
 
   private Student buildStudent(String line) {

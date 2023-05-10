@@ -1,8 +1,11 @@
 package ro.unibuc.info;
 
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import ro.unibuc.info.config.DatabaseConnection;
+import ro.unibuc.info.exception.DataNotFoundException;
 import ro.unibuc.info.logging.Logger;
 import ro.unibuc.info.logging.LoggerFactory;
 import ro.unibuc.info.logging.LoggerType;
@@ -19,19 +22,23 @@ public class Main {
   public static void main(String[] args) {
     final Logger logger = LoggerFactory.getLogger(LoggerType.CONSOLE);
 
-    StudentService studentService = new StudentService(); //dependency injection for repository
+    StudentService studentService = new StudentService(new StudentsRepository());
     CatalogService catalogService = new CatalogService();
 
     // load students from file
-    List<Student> students = studentService.loadStudentsFromFile();
-    Catalog catalog = catalogService.init(students);
-    //TODO: load data from file
-    // show menu for catalog - get all students, get student details, get student grades, get student final grade etc
-    // filter students, use streams
+//    List<Student> students = studentService.loadStudentsFromFile();
+//    studentService.insert(students);
 
-    //TODO: refactor this
-    Student s = StudentsRepository.getStudentById(1);
-    logger.logInfo(s.getFirstName() + " " + s.getLastName());
+    //Load students from db
+    List<Student> students = studentService.findAll();
+    Catalog catalog = catalogService.init(students);
+
+    try {
+      Student st = studentService.getStudentById(22);
+      logger.logInfo(st.toString());
+    } catch (DataNotFoundException ex) {
+      logger.logError("custom implementaton for datanotfound");
+    }
 
     Scanner scanner = new Scanner(System.in);
     String option = "";
@@ -68,6 +75,20 @@ public class Main {
             }
           });
         }
+        case "final" -> {
+          logger.logInfo("Type student's email");
+          String email = scanner.nextLine();
+
+          Student student = catalog.getGrades().keySet().stream()
+              .filter(key -> key.getEmail().equals(email)).findFirst().orElseThrow();
+          catalog.getGrades().get(student).stream().forEach(courseGrades ->
+              logger.logInfo("Course: " + courseGrades.getCourse() +
+                  (!courseGrades.getGrades().isEmpty() ?
+                      courseGrades.getGrades().stream().mapToInt(Integer::intValue).sum()
+                          / courseGrades.getGrades().size()
+                      : 0)
+              ));
+        }
         case "exit" -> {
           logger.logInfo("Thank you, bye!");
           option = "";
@@ -76,7 +97,12 @@ public class Main {
       }
     } while (!"".equals(option));
 
+    //close db connection
+    try {
+      DatabaseConnection.closeConnection();
+    } catch (SQLException e) {
+      logger.logError("Could not close db connection");
+    }
+
   }
-
-
 }
