@@ -23,6 +23,9 @@ public class CatalogService {
       studentsGrades.put(student, grades);
     });
 
-    return new Catalog(2, studentsGrades);
+    return Catalog.builder()
+        .year(2)
+        .grades(studentsGrades)
+        .build();
   }
 }

@@ -3,19 +3,17 @@ package ro.unibuc.info.service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
+import lombok.RequiredArgsConstructor;
 import ro.unibuc.info.exception.DataNotFoundException;
 import ro.unibuc.info.model.Catalog;
 import ro.unibuc.info.model.Student;
 import ro.unibuc.info.repository.Repository;
 import ro.unibuc.info.utils.FileUtils;
 
+@RequiredArgsConstructor
 public class StudentService {
 
   private final Repository studentsRepository;
-
-  public StudentService(Repository studentsRepository) {
-    this.studentsRepository = studentsRepository;
-  }
 
   public Student getStudentById(int id) {
     return studentsRepository.getStudentById(id)
