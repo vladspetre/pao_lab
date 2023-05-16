@@ -1,31 +1,66 @@
 package ro.unibuc.info;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import ro.unibuc.info.lambda.Function;
-import ro.unibuc.info.logger.ConsoleLogger;
-import ro.unibuc.info.logger.FileLogger;
-import ro.unibuc.info.logger.Logger;
 import ro.unibuc.info.model.ElectricCar;
 import ro.unibuc.info.model.ElectricScooter;
-import ro.unibuc.info.model.ParkingLot;
 import ro.unibuc.info.model.Vehicle;
-import ro.unibuc.info.service.EmailNotificationService;
-import ro.unibuc.info.service.LogUtil;
-import ro.unibuc.info.service.NotificationService;
-import ro.unibuc.info.service.ParkingService;
+import ro.unibuc.info.threads.ConsumerTask;
+import ro.unibuc.info.threads.PrintNumbersRunnable;
+import ro.unibuc.info.threads.ProducerTask;
 
 public class Main {
 
+  public static List<Integer> numbers = new ArrayList<>();
   public static void main(String[] args) {
 
+    System.out.println(Thread.currentThread().getName() + " start thread");
+
+    //v1
+//    PrintNumbersThread t = new PrintNumbersThread();
+//    t.start();
+
+    //v2
+//    Thread t = new Thread(() -> {
+//      System.out.println(Thread.currentThread().getName() + "Starting printing numbers");
+//      for (int i = 0; i < 10; i++) {
+//        System.out.println(Thread.currentThread().getName() + " " + i);
+//      }
+//    }
+//    );
+//    t.start();
+
+    //v3
+//    ExecutorService es = Executors.newCachedThreadPool();
+//
+//    es.submit(() -> {
+//      System.out.println(Thread.currentThread().getName() + "Starting printing numbers");
+//      for (int i = 0; i < 10; i++) {
+//        System.out.println(Thread.currentThread().getName() + " " + i);
+//      }
+//    });
+//
+//    es.submit(() -> {
+//      System.out.println(Thread.currentThread().getName() + "Starting printing numbers");
+//      for (int i = 0; i < 10; i++) {
+//        System.out.println(Thread.currentThread().getName() + " " + i);
+//      }
+//    });
+
+
+    //v4
+    ExecutorService es = Executors.newCachedThreadPool();
+    es.submit(new ProducerTask());
+    es.submit(new ConsumerTask());
+    es.submit(new ProducerTask());
+    es.submit(new ConsumerTask());
+
+    System.out.println(Thread.currentThread().getName() + " finish thread");
+
+/*
     Logger consoleLog = new ConsoleLogger();
     Logger fileLog = new FileLogger();
 
@@ -117,7 +152,7 @@ public class Main {
       service.addVehicle(pl.getPumps(), buildVehicle(option));
       service.showLot(pl);
     } while (true);
-
+*/
   }
 
   private static void throwException() {
